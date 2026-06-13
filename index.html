@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Untuk Kamu 🌸</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap");
+
+      :root {
+        --pink-soft: #ffd6e7;
+        --pink-mid: #ff9ec4;
+        --pink-deep: #e8609a;
+        --pink-dark: #c0407a;
+        --rose: #ff6b9d;
+        --cream: #fff5f9;
+        --text: #5a1a3a;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Lato", sans-serif;
+        background: var(--cream);
+        overflow: hidden;
+        height: 100vh;
+        width: 100vw;
+      }
+
+      /* ===================== SCREENS ===================== */
+      .screen {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.8s ease;
+      }
+      .screen.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      /* ===================== SCREEN 1: INTRO FLOWERS ===================== */
+      #screen-intro {
+        background: linear-gradient(
+          160deg,
+          #fff0f8 0%,
+          #ffe0ef 50%,
+          #fecfe3 100%
+        );
+        overflow: hidden;
+      }
+
+      .intro-content {
+        text-align: center;
+        z-index: 10;
+        position: relative;
+      }
+
+      .intro-title {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(2rem, 6vw, 4rem);
+        color: var(--pink-dark);
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeUp 1s ease 2.5s forwards;
+        line-height: 1.2;
+      }
+
+      .intro-subtitle {
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+        font-size: clamp(1rem, 2.5vw, 1.4rem);
+        color: var(--pink-deep);
+        margin-top: 12px;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeUp 1s ease 3.1s forwards;
+      }
+
+      .intro-btn {
+        margin-top: 40px;
+        padding: 14px 42px;
+        background: linear-gradient(135deg, var(--pink-deep), var(--pink-dark));
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-family: "Lato", sans-serif;
+        font-size: 1rem;
+        letter-spacing: 1.5px;
+        cursor: pointer;
+        opacity: 0;
+        animation: fadeUp 1s ease 3.7s forwards;
+        box-shadow: 0 8px 30px rgba(232, 96, 154, 0.4);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .intro-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px rgba(232, 96, 154, 0.5);
+      }
+
+      /* SVG Flowers */
+      .flower-svg {
+        position: absolute;
+        opacity: 0;
+        animation: bloomUp var(--dur, 1.2s) cubic-bezier(0.22, 1, 0.36, 1)
+          var(--delay, 0s) forwards;
+      }
+
+      @keyframes bloomUp {
+        0% {
+          opacity: 0;
+          transform: translateY(80px) scale(0.3) rotate(var(--rot, 0deg));
+        }
+        60% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1) rotate(var(--rot, 0deg));
+        }
+      }
+      @keyframes fadeUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes sway {
+        0%,
+        100% {
+          transform: rotate(var(--rot, 0deg)) translateY(0);
+        }
+        50% {
+          transform: rotate(calc(var(--rot, 0deg) + 4deg)) translateY(-6px);
+        }
+      }
+      .flower-svg.sway {
+        animation:
+          bloomUp var(--dur, 1.2s) cubic-bezier(0.22, 1, 0.36, 1)
+            var(--delay, 0s) forwards,
+          sway 4s ease-in-out var(--sway-delay, 3s) infinite;
+      }
+
+      /* ===================== SCREEN 2: PUZZLE ===================== */
+      #screen-puzzle {
+        background: linear-gradient(160deg, #fff0f8 0%, #f8d7e8 100%);
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+      }
+
+      .puzzle-header {
+        text-align: center;
+      }
+      .puzzle-header h2 {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(1.5rem, 4vw, 2.2rem);
+        color: var(--pink-dark);
+      }
+      .puzzle-header p {
+        color: var(--pink-deep);
+        font-size: 0.95rem;
+        margin-top: 6px;
+        font-style: italic;
+      }
+
+      .progress-bar-wrap {
+        width: 240px;
+        height: 6px;
+        background: var(--pink-soft);
+        border-radius: 99px;
+        overflow: hidden;
+        margin: 8px auto 0;
+      }
+      .progress-bar-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--pink-mid), var(--pink-dark));
+        border-radius: 99px;
+        transition: width 0.4s ease;
+      }
+
+      .puzzle-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        max-width: min(400px, 90vw);
+        width: 100%;
+      }
+
+      .tile {
+        aspect-ratio: 1;
+        perspective: 600px;
+        cursor: pointer;
+      }
+
+      .tile-inner {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 10px;
+      }
+
+      .tile.flipped .tile-inner {
+        transform: rotateY(180deg);
+      }
+
+      .tile-front,
+      .tile-back {
+        position: absolute;
+        inset: 0;
+        border-radius: 10px;
+        backface-visibility: hidden;
+        overflow: hidden;
+      }
+
+      .tile-front {
+        background: linear-gradient(135deg, var(--pink-mid), var(--pink-deep));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(232, 96, 154, 0.3);
+        font-size: 1.6rem;
+        transition: background 0.3s;
+      }
+      .tile:hover:not(.flipped) .tile-front {
+        background: linear-gradient(135deg, var(--pink-deep), var(--pink-dark));
+        transform: scale(1.02);
+      }
+
+      .tile-back {
+        transform: rotateY(180deg);
+        background: #ccc;
+      }
+      .tile-back img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      /* ===================== SCREEN 3: REVEAL ===================== */
+      #screen-reveal {
+        background: linear-gradient(
+          160deg,
+          #2a0a1a 0%,
+          #5c1a3a 60%,
+          #8b2a5a 100%
+        );
+        flex-direction: column;
+        gap: 0;
+        overflow: hidden;
+      }
+
+      .reveal-photo-wrap {
+        position: relative;
+        width: min(380px, 85vw);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        transform: scale(0.8);
+        transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .reveal-photo-wrap.show {
+        opacity: 1;
+        transform: scale(1);
+      }
+      .reveal-photo-wrap img {
+        width: 100%;
+        display: block;
+      }
+      .reveal-photo-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top,
+          rgba(42, 10, 26, 0.7) 0%,
+          transparent 50%
+        );
+      }
+
+      .reveal-caption {
+        text-align: center;
+        color: white;
+        padding: 30px 20px 0;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 1s ease 0.6s;
+      }
+      .reveal-caption.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .reveal-caption h2 {
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+        font-size: clamp(1.4rem, 4vw, 2rem);
+        color: var(--pink-soft);
+        line-height: 1.3;
+      }
+      .reveal-caption p {
+        font-size: 0.9rem;
+        color: var(--pink-mid);
+        margin-top: 8px;
+        letter-spacing: 0.5px;
+      }
+
+      .reveal-next-btn {
+        margin-top: 28px;
+        padding: 14px 42px;
+        background: linear-gradient(135deg, var(--pink-mid), var(--pink-deep));
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-family: "Lato", sans-serif;
+        font-size: 1rem;
+        letter-spacing: 1.5px;
+        cursor: pointer;
+        opacity: 0;
+        transition:
+          all 0.5s ease 1.4s,
+          transform 0.2s,
+          box-shadow 0.2s;
+        box-shadow: 0 8px 30px rgba(255, 110, 157, 0.4);
+      }
+      .reveal-next-btn.show {
+        opacity: 1;
+      }
+      .reveal-next-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px rgba(255, 110, 157, 0.6);
+      }
+
+      /* ===================== SCREEN 4: LOVE LETTER ===================== */
+      #screen-letter {
+        background: linear-gradient(
+          160deg,
+          #fff0f8 0%,
+          #ffe4f0 50%,
+          #fecfe3 100%
+        );
+        overflow: hidden;
+        padding: 20px;
+      }
+
+      .letter-wrap {
+        max-width: 560px;
+        width: 100%;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+
+      .letter-title {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(2rem, 6vw, 3.5rem);
+        color: var(--pink-dark);
+        opacity: 0;
+        animation: fadeUp 1s ease 0.3s forwards;
+        line-height: 1.1;
+      }
+
+      .letter-divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        justify-content: center;
+        margin: 16px 0;
+        opacity: 0;
+        animation: fadeUp 0.8s ease 0.7s forwards;
+      }
+      .letter-divider span {
+        color: var(--pink-mid);
+        font-size: 1.4rem;
+      }
+      .letter-divider::before,
+      .letter-divider::after {
+        content: "";
+        flex: 1;
+        max-width: 80px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--pink-mid));
+      }
+      .letter-divider::after {
+        background: linear-gradient(90deg, var(--pink-mid), transparent);
+      }
+
+      .letter-body {
+        background: white;
+        border-radius: 20px;
+        padding: 30px 35px;
+        box-shadow: 0 10px 50px rgba(232, 96, 154, 0.15);
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeUp 1s ease 1s forwards;
+        border: 1px solid rgba(232, 96, 154, 0.15);
+        position: relative;
+        overflow: hidden;
+      }
+      .letter-body::before {
+        content: "❝";
+        position: absolute;
+        top: 10px;
+        left: 20px;
+        font-size: 5rem;
+        color: var(--pink-soft);
+        font-family: "Playfair Display", serif;
+        line-height: 1;
+        pointer-events: none;
+      }
+
+      .letter-text {
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+        font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+        color: var(--text);
+        line-height: 1.9;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Editable fields */
+      .editable {
+        background: transparent;
+        border: none;
+        border-bottom: 2px dashed var(--pink-mid);
+        color: var(--pink-dark);
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+        font-size: inherit;
+        text-align: center;
+        outline: none;
+        padding: 2px 6px;
+        width: auto;
+        min-width: 80px;
+        cursor: text;
+        transition: border-color 0.3s;
+      }
+      .editable:focus {
+        border-bottom-color: var(--pink-dark);
+      }
+
+      .letter-sign {
+        margin-top: 20px;
+        font-family: "Playfair Display", serif;
+        font-size: 1.1rem;
+        color: var(--pink-deep);
+        opacity: 0;
+        animation: fadeUp 0.8s ease 1.6s forwards;
+      }
+      .letter-sign span {
+        display: block;
+        font-size: 1.8rem;
+        color: var(--pink-dark);
+        font-weight: 700;
+        margin-top: 4px;
+      }
+
+      /* Floating petals on letter screen */
+      .petal {
+        position: fixed;
+        pointer-events: none;
+        font-size: 1.2rem;
+        animation: petalFall linear infinite;
+        z-index: 0;
+      }
+      @keyframes petalFall {
+        0% {
+          transform: translateY(-60px) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(110vh) rotate(720deg);
+          opacity: 0;
+        }
+      }
+
+      /* Confetti burst */
+      .confetti-piece {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        pointer-events: none;
+        animation: confettiFall 2.5s ease forwards;
+        z-index: 100;
+      }
+      @keyframes confettiFall {
+        0% {
+          transform: translate(var(--tx, 0), -20px) scale(1) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(var(--tx, 0), 120vh) scale(0.3) rotate(720deg);
+          opacity: 0;
+        }
+      }
+
+      /* ===================== UTILITIES ===================== */
+      @keyframes pulse-heart {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.15);
+        }
+      }
+      .pulse {
+        animation: pulse-heart 1.5s ease-in-out infinite;
+      }
+
+      @media (max-width: 480px) {
+        .puzzle-grid {
+          gap: 4px;
+        }
+        .tile-front {
+          font-size: 1.2rem;
+        }
+        .letter-body {
+          padding: 22px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ========== SCREEN 1: INTRO ========== -->
+    <div id="screen-intro" class="screen active">
+      <!-- Flowers will be injected by JS -->
+      <div id="flowers-container"></div>
+
+      <div class="intro-content">
+        <div class="intro-title">Hei, ini untukmu 🌸</div>
+        <div class="intro-subtitle">Ada sesuatu yang ingin aku tunjukkan…</div>
+        <button
+          class="intro-btn"
+          onclick="
+            goTo('screen-puzzle');
+            startMusic();
+          "
+        >
+          Buka Hadiah ✨
+        </button>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 2: PUZZLE ========== -->
+    <div id="screen-puzzle" class="screen">
+      <div class="puzzle-header">
+        <h2>Siapakah yang tersembunyi di sini?</h2>
+        <p>Balik setiap kartu untuk menemukan jawabannya 🌷</p>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+      </div>
+
+      <div class="puzzle-grid" id="puzzle-grid"></div>
+    </div>
+
+    <!-- ========== SCREEN 3: REVEAL ========== -->
+    <div id="screen-reveal" class="screen">
+      <div class="reveal-photo-wrap" id="reveal-photo-wrap">
+        <!--
+      GANTI SRC dengan link foto temanmu!
+      Cara termudah: upload foto ke https://imgbb.com atau https://postimages.org
+      lalu copy link direct dan paste di sini.
+
+      Contoh: <img src="https://i.ibb.co/xxxx/foto.jpg" alt="Foto">
+    -->
+        <img
+          id="reveal-img"
+          src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=600&q=80"
+          alt="Foto Kamu"
+        />
+        <div class="reveal-photo-overlay"></div>
+      </div>
+
+      <div class="reveal-caption" id="reveal-caption">
+        <h2>"Sebentar lagi, kamu sampai… 🌸"</h2>
+        <p>aku bangga melihat sejauh ini kamu sudah berjalan</p>
+      </div>
+
+      <button
+        class="reveal-next-btn"
+        id="reveal-next-btn"
+        onclick="goToLetter()"
+      >
+        Baca pesanku 💌
+      </button>
+    </div>
+
+    <!-- ========== SCREEN 4: LOVE LETTER ========== -->
+    <div id="screen-letter" class="screen">
+      <div id="petals-container"></div>
+      <div class="letter-wrap">
+        <div class="letter-title">Untuk Kamu</div>
+        <div class="letter-divider"><span>🌸</span></div>
+
+        <div class="letter-body">
+          <p class="letter-text" id="letter-text">
+            Hai
+            <input
+              class="editable"
+              id="nama"
+              value="[nama kamu]"
+              size="10"
+            />,<br /><br />
+            Aku tahu sekarang bukan waktu yang mudah. Tahap akhir kuliah itu
+            berat — tugas menumpuk, ekspektasi terasa tinggi, dan kadang kamu
+            mungkin bertanya-tanya apakah kamu cukup kuat untuk sampai di
+            ujungnya.
+            <br /><br />
+            Tapi aku mau kamu tahu: kamu sudah sejauh ini. Itu bukan hal kecil.
+            🌷 Setiap langkah yang kamu ambil, setiap malam yang kamu lewati,
+            semuanya nyata dan semuanya berarti.
+            <br /><br />
+            Dunia industri di luar sana menunggu seseorang seperti kamu — yang
+            gigih, yang tidak menyerah meski lelah. Jadi teruslah berjalan, ya.
+            Aku di sini, selalu mendukungmu dari jauh. 🌸
+          </p>
+        </div>
+
+        <div class="letter-sign">
+          Dengan sepenuh hati,
+          <span
+            >—
+            <input class="editable" id="pengirim" value="Micplee" size="8" />
+            🌸</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /* ============================================================
+   FLOWERS — Intro Animation
+   ============================================================ */
+      const flowerDefs = [
+        // [x%, y%, size, delay, rotation]
+        [8, 85, 90, 0.2, -15],
+        [22, 78, 70, 0.5, 10],
+        [38, 88, 55, 0.8, -5],
+        [55, 82, 75, 0.3, 20],
+        [70, 80, 60, 0.6, -8],
+        [85, 86, 85, 0.1, 12],
+        [5, 55, 50, 1.0, -20],
+        [18, 40, 65, 0.9, 15],
+        [92, 60, 55, 0.7, -12],
+        [50, 15, 80, 1.2, 5],
+        [75, 25, 50, 1.4, -18],
+        [30, 22, 60, 1.1, 22],
+        [63, 50, 45, 1.6, -5],
+        [10, 20, 55, 1.5, 8],
+      ];
+
+      const flowerColors = [
+        ["#FF9EC4", "#FFD6E7", "#FF6B9D"],
+        ["#FFB3D1", "#FF80B0", "#E8609A"],
+        ["#FFC0D5", "#FF91C0", "#D4558A"],
+        ["#FFCCE0", "#FF9EC4", "#C0407A"],
+      ];
+
+      function makePetal(cx, cy, r, color, angle) {
+        return `<ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${r * 1.6}"
+    fill="${color}" transform="rotate(${angle} 50 50)" opacity="0.9"/>`;
+      }
+
+      function makeFlowerSVG(size, colors) {
+        const petals = [0, 45, 90, 135, 180, 225, 270, 315]
+          .map((a) =>
+            makePetal(
+              50,
+              30,
+              12,
+              colors[Math.floor(Math.random() * colors.length)],
+              a,
+            ),
+          )
+          .join("");
+        return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">
+    <g>
+      ${petals}
+      <circle cx="50" cy="50" r="14" fill="#FFE066"/>
+      <circle cx="50" cy="50" r="9" fill="#FFCA28"/>
+      <circle cx="50" cy="50" r="5" fill="#FF9900" opacity="0.8"/>
+    </g>
+  </svg>`;
+      }
+
+      const container = document.getElementById("flowers-container");
+      flowerDefs.forEach(([x, y, size, delay, rot], i) => {
+        const div = document.createElement("div");
+        div.className = "flower-svg sway";
+        const colors = flowerColors[i % flowerColors.length];
+        div.style.cssText = `left:${x}%;top:${y}%;
+    --delay:${delay}s;--dur:1.4s;--rot:${rot}deg;
+    --sway-delay:${delay + 2.5}s;transform:rotate(${rot}deg);`;
+        div.innerHTML = makeFlowerSVG(size, colors);
+        container.appendChild(div);
+      });
+
+      /* ============================================================
+   PUZZLE — 4×4 Flip Grid
+   ============================================================ */
+      // 👇 GANTI src ini dengan URL foto temanmu (sama persis dengan di atas)
+      const PHOTO_URL = "https://i.ibb.co.com/JWbDRKNg/ava-cila.png";
+
+      const emojis = [
+        "🌸",
+        "🌷",
+        "🌺",
+        "🌼",
+        "💐",
+        "🌹",
+        "🌻",
+        "💮",
+        "🏵️",
+        "🌸",
+        "🌷",
+        "🌺",
+        "🌼",
+        "💐",
+        "🌹",
+        "🌻",
+      ];
+      const grid = document.getElementById("puzzle-grid");
+      let flippedCount = 0;
+      const TOTAL = 16;
+
+      for (let i = 0; i < TOTAL; i++) {
+        const row = Math.floor(i / 4);
+        const col = i % 4;
+        const bgX = -(col * 25);
+        const bgY = -(row * 25);
+
+        const tile = document.createElement("div");
+        tile.className = "tile";
+        tile.dataset.index = i;
+        tile.innerHTML = `
+    <div class="tile-inner">
+      <div class="tile-front">${emojis[i]}</div>
+      <div class="tile-back">
+        <img src="${PHOTO_URL}" alt=""
+          style="object-position:${(col * 100) / 3}% ${(row * 100) / 3}%;
+                 transform:scale(4);transform-origin:${(col * 100) / 3}% ${(row * 100) / 3}%">
+      </div>
+    </div>`;
+        tile.addEventListener("click", () => flipTile(tile));
+        grid.appendChild(tile);
+      }
+
+      function flipTile(tile) {
+        if (tile.classList.contains("flipped")) return;
+        tile.classList.add("flipped");
+        flippedCount++;
+        const pct = (flippedCount / TOTAL) * 100;
+        document.getElementById("progress-fill").style.width = pct + "%";
+        if (flippedCount === TOTAL) {
+          setTimeout(showReveal, 900);
+        }
+      }
+
+      /* ============================================================
+   SCREEN TRANSITIONS
+   ============================================================ */
+      function goTo(id) {
+        document
+          .querySelectorAll(".screen")
+          .forEach((s) => s.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+      }
+
+      function showReveal() {
+        goTo("screen-reveal");
+        setTimeout(() => {
+          document.getElementById("reveal-photo-wrap").classList.add("show");
+          document.getElementById("reveal-caption").classList.add("show");
+        }, 200);
+        setTimeout(() => {
+          document.getElementById("reveal-next-btn").classList.add("show");
+        }, 600);
+      }
+
+      function goToLetter() {
+        fireConfetti();
+        goTo("screen-letter");
+        startPetals();
+      }
+
+      /* ============================================================
+   CONFETTI BURST
+   ============================================================ */
+      function fireConfetti() {
+        const colors = [
+          "#FF9EC4",
+          "#FFD6E7",
+          "#FF6B9D",
+          "#FFCA28",
+          "#FF80B0",
+          "#FFC0D5",
+        ];
+        for (let i = 0; i < 80; i++) {
+          const el = document.createElement("div");
+          el.className = "confetti-piece";
+          const x = Math.random() * window.innerWidth;
+          el.style.cssText = `
+      left:${x}px; top:0;
+      background:${colors[Math.floor(Math.random() * colors.length)]};
+      width:${6 + Math.random() * 10}px;height:${6 + Math.random() * 10}px;
+      border-radius:${Math.random() > 0.5 ? "50%" : "2px"};
+      --tx:${(Math.random() - 0.5) * 200}px;
+      animation-delay:${Math.random() * 0.8}s;
+      animation-duration:${2 + Math.random() * 1.5}s;`;
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), 4000);
+        }
+      }
+
+      /* ============================================================
+   FLOATING PETALS on Letter Screen
+   ============================================================ */
+      function startPetals() {
+        const petalSymbols = ["🌸", "🌷", "🌺", "💕", "🌹", "✨", "🌼"];
+        const cont = document.getElementById("petals-container");
+        setInterval(() => {
+          const p = document.createElement("div");
+          p.className = "petal";
+          p.textContent =
+            petalSymbols[Math.floor(Math.random() * petalSymbols.length)];
+          p.style.cssText = `left:${Math.random() * 100}vw;
+      animation-duration:${5 + Math.random() * 5}s;
+      animation-delay:0s;
+      font-size:${0.9 + Math.random() * 0.8}rem;
+      opacity:${0.4 + Math.random() * 0.4}`;
+          cont.appendChild(p);
+          setTimeout(() => p.remove(), 11000);
+        }, 600);
+      }
+
+      /* ============================================================
+   EDITABLE INPUT auto-resize
+   ============================================================ */
+      document.querySelectorAll(".editable").forEach((el) => {
+        el.addEventListener("input", () => {
+          el.size = Math.max(4, el.value.length + 1);
+        });
+        el.addEventListener("focus", () => {
+          if (el.value.startsWith("[")) el.value = "";
+        });
+      });
+
+      // Sync foto reveal & puzzle
+      document.getElementById("reveal-img").src = PHOTO_URL;
+
+      /* ============================================================
+   MUSIC — YouTube IFrame API
+   ============================================================ */
+      var ytPlayer = null;
+      var musicReady = false;
+      var musicPlaying = false;
+      var musicStarted = false;
+
+      // Load YouTube IFrame API
+      (function () {
+        var tag = document.createElement("script");
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(tag);
+      })();
+
+      // Create hidden player div
+      var ytDiv = document.createElement("div");
+      ytDiv.id = "yt-player-div";
+      ytDiv.style.cssText =
+        "position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;";
+      document.body.appendChild(ytDiv);
+
+      function onYouTubeIframeAPIReady() {
+        ytPlayer = new YT.Player("yt-player-div", {
+          height: "1",
+          width: "1",
+          videoId: "lwgr_IMeEgA",
+          playerVars: {
+            autoplay: 0,
+            controls: 0,
+            loop: 1,
+            playlist: "lwgr_IMeEgA",
+            rel: 0,
+            modestbranding: 1,
+          },
+          events: {
+            onReady: function (e) {
+              musicReady = true;
+              e.target.setVolume(70);
+            },
+            onStateChange: function (e) {
+              if (e.data === YT.PlayerState.PLAYING) {
+                musicPlaying = true;
+                document.getElementById("music-toggle").innerHTML =
+                  "&#9646;&#9646;";
+              } else if (
+                e.data === YT.PlayerState.PAUSED ||
+                e.data === YT.PlayerState.ENDED
+              ) {
+                musicPlaying = false;
+                document.getElementById("music-toggle").innerHTML = "&#9654;";
+              }
+            },
+          },
+        });
+      }
+
+      function startMusic() {
+        var wrap = document.getElementById("yt-player-wrap");
+        wrap.style.opacity = "1";
+        wrap.style.pointerEvents = "all";
+        if (musicStarted) return;
+        musicStarted = true;
+
+        function tryPlay() {
+          if (musicReady && ytPlayer && ytPlayer.playVideo) {
+            ytPlayer.playVideo();
+          } else {
+            setTimeout(tryPlay, 300);
+          }
+        }
+        tryPlay();
+      }
+
+      function toggleMusic() {
+        if (!ytPlayer) return;
+        if (musicPlaying) {
+          ytPlayer.pauseVideo();
+        } else {
+          ytPlayer.playVideo();
+        }
+      }
+    </script>
+
+    <!-- ===== MUSIC PLAYER ===== -->
+    <div
+      id="yt-player-wrap"
+      style="
+        position: fixed;
+        bottom: 22px;
+        right: 22px;
+        z-index: 999;
+        opacity: 0;
+        transition: opacity 1.5s ease;
+        pointer-events: none;
+      "
+    >
+      <div
+        style="
+          background: rgba(255, 255, 255, 0.93);
+          border-radius: 16px;
+          padding: 10px 15px;
+          box-shadow: 0 8px 32px rgba(232, 96, 154, 0.25);
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          backdrop-filter: blur(8px);
+          border: 1px solid rgba(232, 96, 154, 0.15);
+        "
+      >
+        <div
+          id="music-note"
+          style="
+            font-size: 1.3rem;
+            animation: pulse-heart 1.5s ease-in-out infinite;
+          "
+        >
+          &#x1F3B5;
+        </div>
+        <div>
+          <div
+            style="
+              font-family: &quot;Playfair Display&quot;, serif;
+              font-size: 0.78rem;
+              color: #c0407a;
+              font-weight: 700;
+              letter-spacing: 0.3px;
+            "
+          >
+            Rise Up
+          </div>
+          <div style="font-size: 0.68rem; color: #e8609a; font-style: italic">
+            Andra Day
+          </div>
+        </div>
+        <button
+          id="music-toggle"
+          onclick="toggleMusic()"
+          title="Play/Pause"
+          style="
+            background: linear-gradient(135deg, #ff9ec4, #e8609a);
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            color: white;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(232, 96, 154, 0.4);
+            flex-shrink: 0;
+            line-height: 1;
+          "
+        >
+          &#9646;&#9646;
+        </button>
+      </div>
+    </div>
+  </body>
+</html>
